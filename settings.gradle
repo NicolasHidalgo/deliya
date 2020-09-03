@@ -1,0 +1,2 @@
+rootProject.name='deliya'
+include ':app'
