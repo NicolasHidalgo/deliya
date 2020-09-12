@@ -9,6 +9,7 @@ import helper.Session;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,7 +33,6 @@ public class MenuActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
-
 
         txtUsuarioNombre = findViewById(R.id.txtUsuarioNombre);
         UsuarioBean user = session.getUsuario();
@@ -66,4 +66,11 @@ public class MenuActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+    public void btnComida(View view){
+        Fragment selectedFragment = null;
+        selectedFragment = new LocalesFragment();
+        getSupportFragmentManager() .beginTransaction().replace(R.id.fragment_container,
+                selectedFragment).commit();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.deliya;
 
 import androidx.appcompat.app.AppCompatActivity;
+import beans.TiendaBean;
 import beans.UsuarioBean;
 import db.DatabaseManagerUsuario;
 import helper.ConnectivityReceiver;
@@ -43,7 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -175,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                         bean.setIAT(iat);
                         bean.setEXP(exp);
                         session.setUsuario(bean);
+                        session.setToken(token);
 
                         Intent k = new Intent(getApplicationContext(), MenuActivity.class);
                         startActivity(k);
@@ -204,6 +208,8 @@ public class LoginActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
+
+        //WebServiceLocales();
     }
 
     public void btnRegistrarse(View view) {
@@ -214,5 +220,56 @@ public class LoginActivity extends AppCompatActivity {
     public void btnSolicitarRecuperarPassword(View view) {
         Intent k = new Intent(getApplicationContext(), SolicitarRecuperarPasswordActivity.class);
         startActivity(k);
+    }
+
+    public void WebServiceLocales(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, SERVER + "stores", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equals("[]") || response.equals("")){
+                    //Toast.makeText(context, "No se encontraron datos SP_EMPRESA", Toast.LENGTH_LONG).show();
+                }else{
+                    try {
+                        List<TiendaBean> tiendas = new ArrayList<>();
+                        TiendaBean bean  = null;
+                        JSONArray jsonArray = new JSONArray(response);
+                        JSONObject jsonObject = null;
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            jsonObject = jsonArray.getJSONObject(i);
+                            bean = new TiendaBean();
+                            bean.setID(jsonObject.getString("ID"));
+                            bean.setRUC(jsonObject.getString("RUC"));
+                            bean.setNOMBRE(jsonObject.getString("NAME"));
+                            bean.setDESCRIPCION(jsonObject.getString("DESCRIPTION"));
+                            bean.setDIRECCION(jsonObject.getString("ADDRESS"));
+                            bean.setCOD_DISTRITO(jsonObject.getString("DISTRICTS_CODE"));
+                            bean.setCOD_CATEGORIA(jsonObject.getString("CATEGORIES_CODE"));
+                            bean.setLATITUD(jsonObject.getString("LATITUDE"));
+                            bean.setLONGITUD(jsonObject.getString("LONGITUDE"));
+                            tiendas.add(bean);
+                            //dbUsuario.insertar(bean);
+                        }
+                        session.setTiendas(tiendas);
+
+                    } catch (JSONException e) {
+                        Toast.makeText(context, "Error en el registro json LOCALES: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Error servicio LOCALES: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers =  new HashMap<String, String>();
+                headers.put("Authorization", "Bearer " + session.getToken());
+                return headers;
+            }
+        };
+        requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
     }
 }

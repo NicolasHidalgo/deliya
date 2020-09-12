@@ -5,7 +5,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
+import beans.TiendaBean;
 import beans.UsuarioBean;
 
 public class Session {
@@ -26,6 +31,14 @@ public class Session {
         return IdUsuario;
     }
 
+    public void setToken(String Token) {
+        prefs.edit().putString("Token", Token).commit();
+    }
+    public String getToken() {
+        String Token = prefs.getString("Token","");
+        return Token;
+    }
+
     public void setUsuario(UsuarioBean bean){
         Gson gson = new Gson();
         String json = gson.toJson(bean);
@@ -37,6 +50,19 @@ public class Session {
         String json = prefs.getString("Usuario", "");
         UsuarioBean obj = gson.fromJson(json, UsuarioBean.class);
         return obj;
+    }
+
+    public void setTiendas(List<TiendaBean> tiendas){
+        Gson gson = new Gson();
+        String json = gson.toJson(tiendas);
+        prefs.edit().putString("Tiendas", json).commit();
+    }
+    public List<TiendaBean> getTiendas(){
+        Gson gson = new Gson();
+        String json = prefs.getString("Tiendas", "");
+        Type type  = new TypeToken<List<TiendaBean>>(){}.getType();
+        List<TiendaBean> tiendas = gson.fromJson(json, type);
+        return tiendas;
     }
 
 }
