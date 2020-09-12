@@ -19,8 +19,9 @@ public class DatabaseManagerUsuario extends DatabaseManager {
     public static final String CN_APELLIDOS = "APELLIDOS";
     public static final String CN_CORREO = "CORREO";
     public static final String CN_TELEFONO = "TELEFONO";
-    public static final String CN_ID_ROL = "ID_ROL";
-    public static final String CN_ESTADO = "ESTADO";
+    public static final String CN_TYPE_CODE = "TYPE_CODE";
+    public static final String CN_IAT = "IAT";
+    public static final String CN_EXP = "EXP";
 
     public static final String CREATE_TABLE =  "create table " + NOMBRE_TABLA + " ("
             + CN_ID + " integer PRIMARY KEY,"
@@ -28,8 +29,9 @@ public class DatabaseManagerUsuario extends DatabaseManager {
             + CN_APELLIDOS + " text NULL,"
             + CN_CORREO + " text NULL,"
             + CN_TELEFONO + " text NULL,"
-            + CN_ID_ROL + " int NULL,"
-            + CN_ESTADO + " integer NULL DEFAULT 1"
+            + CN_TYPE_CODE + " text NULL,"
+            + CN_IAT + " text NULL,"
+            + CN_EXP + " text NULL"
             + ");";
 
     public DatabaseManagerUsuario(Context ctx) {
@@ -47,8 +49,9 @@ public class DatabaseManagerUsuario extends DatabaseManager {
         valores.put(CN_APELLIDOS,obj.getAPELLIDOS());
         valores.put(CN_CORREO,obj.getCORREO());
         valores.put(CN_TELEFONO,obj.getTELEFONO());
-        valores.put(CN_ID_ROL,obj.getID_ROL());
-        valores.put(CN_ESTADO,obj.getESTADO());
+        valores.put(CN_TYPE_CODE,obj.getTYPE_CODE());
+        valores.put(CN_IAT,obj.getIAT());
+        valores.put(CN_EXP,obj.getEXP());
         return valores;
     }
 
@@ -73,23 +76,23 @@ public class DatabaseManagerUsuario extends DatabaseManager {
         super.getDb().execSQL("DELETE FROM " + NOMBRE_TABLA + ";");
         Log.d(NOMBRE_TABLA + "_eliminados","Datos borrados");
     }
-    public void EliminarRegistro(String id){
+    /*public void EliminarRegistro(String id){
         String sql = "UPDATE " + NOMBRE_TABLA + " SET " +
                 CN_ESTADO + " = 0, " +
                 "WHERE " + CN_ID + " = " + id;
         super.getDb().execSQL(sql);
-    }
+    }*/
     @Override
     public Cursor cargar() {
         String [] columnas = new String[]
-                {CN_ID,CN_NOMBRES,CN_APELLIDOS,CN_CORREO,CN_TELEFONO,CN_ID_ROL,"IFNULL(" + CN_ESTADO + ",1) AS " + CN_ESTADO};
+                {CN_ID,CN_NOMBRES,CN_APELLIDOS,CN_CORREO,CN_TELEFONO,CN_TYPE_CODE,CN_IAT,CN_EXP};
         return super.getDb().query(NOMBRE_TABLA, columnas,null,null,null,null,null);
     }
 
     @Override
     public Cursor cargarById(String id) {
         String [] columnas = new String[]
-                {CN_ID,CN_NOMBRES,CN_APELLIDOS,CN_CORREO,CN_TELEFONO,CN_ID_ROL,"IFNULL(" + CN_ESTADO + ",1) AS " + CN_ESTADO};
+                {CN_ID,CN_NOMBRES,CN_APELLIDOS,CN_CORREO,CN_TELEFONO,CN_TYPE_CODE,CN_IAT,CN_EXP};
         return super.getDb().query(NOMBRE_TABLA, columnas,CN_ID + "=?", new String[]{id},null,null,null);
     }
 
@@ -156,8 +159,9 @@ public class DatabaseManagerUsuario extends DatabaseManager {
             bean.setAPELLIDOS(c.getString(2));
             bean.setCORREO(c.getString(3));
             bean.setTELEFONO(c.getString(4));
-            bean.setID_ROL(c.getString(5));
-            bean.setESTADO(c.getString(6));
+            bean.setTYPE_CODE(c.getString(5));
+            bean.setIAT(c.getString(6));
+            bean.setEXP(c.getString(7));
         }
         return bean;
     }
@@ -174,8 +178,9 @@ public class DatabaseManagerUsuario extends DatabaseManager {
             bean.setAPELLIDOS(c.getString(2));
             bean.setCORREO(c.getString(3));
             bean.setTELEFONO(c.getString(4));
-            bean.setID_ROL(c.getString(5));
-            bean.setESTADO(c.getString(6));
+            bean.setTYPE_CODE(c.getString(5));
+            bean.setIAT(c.getString(6));
+            bean.setEXP(c.getString(7));
             list.add(bean);
         }
         return list;
