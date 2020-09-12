@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,17 +152,29 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(context, "No se encontraron datos SP_USUARIO", Toast.LENGTH_LONG).show();
                     }else{
                         UsuarioBean bean  = null;
-                        //JSONArray jsonArray = new JSONArray(response);
                         JSONObject jsonObject = new JSONObject(response);
                         String token = jsonObject.getString("token");
-                        //jsonObject = jsonArray.getJSONObject(i);
-                        //token = jsonObject.getString("token");
-
-                        //session.setIdUsuario(bean.getID());
-                        //session.setIdRol(bean.getID_ROL());
 
                         JWT jwt = new JWT(token);
+                        String Id = jwt.getClaim("usersId").asString();
+                        String Email = jwt.getClaim("email").asString();
+                        String TypeCode = jwt.getClaim("usersTypeCode").asString();
+                        String Nombres = jwt.getClaim("names").asString();
+                        String Apellidos = jwt.getClaim("lastnames").asString();
+                        String Telefono = jwt.getClaim("cellphone").asString();
+                        String iat = jwt.getClaim("iat").asString();
+                        String exp = jwt.getClaim("exp").asString();
 
+                        bean = new UsuarioBean();
+                        bean.setID(Id);
+                        bean.setCORREO(Email);
+                        bean.setTYPE_CODE(TypeCode);
+                        bean.setNOMBRES(Nombres);
+                        bean.setAPELLIDOS(Apellidos);
+                        bean.setTELEFONO(Telefono);
+                        bean.setIAT(iat);
+                        bean.setEXP(exp);
+                        session.setUsuario(bean);
 
                         Intent k = new Intent(getApplicationContext(), MenuActivity.class);
                         startActivity(k);

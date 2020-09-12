@@ -7,10 +7,9 @@ public class UsuarioBean {
     private String APELLIDOS;
     private String CORREO;
     private String TELEFONO;
-    private String ESTADO;
-
-    private String ID_ROL;
-    private RolBean ROL;
+    private String TYPE_CODE;
+    private String IAT;
+    private String EXP;
 
     public UsuarioBean(){
 
@@ -56,27 +55,27 @@ public class UsuarioBean {
         this.APELLIDOS = APELLIDOS;
     }
 
-    public String getESTADO() {
-        return ESTADO;
+    public String getTYPE_CODE() {
+        return TYPE_CODE;
     }
 
-    public void setESTADO(String ESTADO) {
-        this.ESTADO = ESTADO;
+    public void setTYPE_CODE(String TYPE_CODE) {
+        this.TYPE_CODE = TYPE_CODE;
     }
 
-    public RolBean getROL() {
-        return ROL;
+    public String getIAT() {
+        return IAT;
     }
 
-    public void setROL(RolBean ROL) {
-        this.ROL = ROL;
+    public void setIAT(String IAT) {
+        this.IAT = IAT;
     }
 
-    public String getID_ROL() {
-        return ID_ROL;
+    public String getEXP() {
+        return EXP;
     }
 
-    public void setID_ROL(String ID_ROL) {
-        this.ID_ROL = ID_ROL;
+    public void setEXP(String EXP) {
+        this.EXP = EXP;
     }
 }

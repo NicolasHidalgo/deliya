@@ -3,24 +3,42 @@ package com.example.deliya;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import beans.UsuarioBean;
+import helper.Session;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MenuActivity extends AppCompatActivity {
+
+    TextView txtUsuarioNombre;
+    private Session session;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        session = new Session(this);
+        context = this;
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
+
+
+        txtUsuarioNombre = findViewById(R.id.txtUsuarioNombre);
+        UsuarioBean user = session.getUsuario();
+
+        txtUsuarioNombre.setText(user.getNOMBRES());
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

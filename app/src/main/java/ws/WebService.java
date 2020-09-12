@@ -24,7 +24,6 @@ import db.DatabaseManagerUsuario;
 public class WebService {
 
     public static final String SERVER = "https://deliya.com/";
-    public String URL = SERVER + "select.php";
     public String RESPUESTA = "NADA";
     public String ACCION = "SELECT";
     public String QUERY = "";
@@ -44,7 +43,7 @@ public class WebService {
     public void WebServiceUsuario(){
         dbUsuario = new DatabaseManagerUsuario(context);
         final String QUERY = "call SP_USUARIO('" + ACCION  + "',0,'','',0,'');";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER + "login", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 dbUsuario.eliminarTodo();
@@ -63,8 +62,9 @@ public class WebService {
                             bean.setAPELLIDOS(jsonObject.getString("APELLIDOS"));
                             bean.setCORREO(jsonObject.getString("CORREO"));
                             bean.setTELEFONO(jsonObject.getString("TELEFONO"));
-                            bean.setID_ROL(jsonObject.getString("ID_ROL"));
-                            bean.setESTADO(jsonObject.getString("ESTADO"));
+                            bean.setTYPE_CODE(jsonObject.getString("TYPE_CODE"));
+                            bean.setIAT(jsonObject.getString("IAT"));
+                            bean.setEXP(jsonObject.getString("EXP"));
                             dbUsuario.insertar(bean);
                         }
                     } catch (JSONException e) {
