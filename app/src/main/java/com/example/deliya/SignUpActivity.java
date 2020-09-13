@@ -3,15 +3,20 @@ package com.example.deliya;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,7 +26,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.auth0.android.jwt.JWT;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.security.ProviderInstaller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +41,7 @@ import java.util.Map;
 import beans.UsuarioBean;
 import db.DatabaseManagerUsuario;
 import helper.ConnectivityReceiver;
+import helper.Session;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -43,16 +53,43 @@ public class SignUpActivity extends AppCompatActivity {
     public static final String SERVER = "http://3.137.143.14:3000/";
     ProgressBar progressBar;
     RequestQueue requestQueue;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        session = new Session(this);
+        context = this;
+
+        requestQueue = Volley.newRequestQueue(context);
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            try {
+                ProviderInstaller.installIfNeeded(getApplicationContext());
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ProgressBarHandler(context);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
+    public void ProgressBarHandler(Context context) {
+        ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
+        progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+        progressBar.setIndeterminate(true);
+        RelativeLayout.LayoutParams params = new
+                RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        RelativeLayout rl = new RelativeLayout(context);
+        rl.setGravity(Gravity.CENTER);
+        rl.addView(progressBar);
+        layout.addView(rl, params);
+    }
 
-
-    @SuppressLint("WrongViewCast")
     public void btnSignUp(View view) {
 
         textPersonName = (EditText) findViewById(R.id.textPersonName);
@@ -95,8 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Debe ingresar el campo contraseña", Toast.LENGTH_LONG).show();
             return;
         }
-        System.out.println(Password);
-        System.out.println(ConfirmPassword);
+
         if (!ConfirmPassword.equals(Password)){
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
             return;
@@ -120,27 +156,20 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    //dbUsuario.eliminarPorUsuarioPassword(Usuario,Password);
-                    //dbUsuario.eliminarTodo();
+
                     if (response.equals("[]")){
-                        //CloseProgressBar();
                         Toast.makeText(context, "Datos incorrectos o usuario ya éxiste.", Toast.LENGTH_LONG).show();
+                    }else if (response.equals("")){
+
+                        Toast.makeText(context, "No se encontraron datos SP_USUARIO", Toast.LENGTH_LONG).show();
                     }else{
-                        UsuarioBean bean  = null;
-                        //JSONArray jsonArray = new JSONArray(response);
-                        //JSONObject jsonObject = new JSONObject(response);
-                       // String token = jsonObject.getString("token");
-                        //jsonObject = jsonArray.getJSONObject(i);
-                        //token = jsonObject.getString("token");
 
-                        //session.setIdUsuario(bean.getID());
-                        //session.setIdRol(bean.getID_ROL());
-
-                        //JWT jwt = new JWT(token);
-
+                        JSONObject jsonObject = new JSONObject(response);
+                        String message = jsonObject.getString("message");
 
                         Intent k = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(k);
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -150,6 +179,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //CloseProgressBar();
+
                 Toast.makeText(getApplicationContext(), "Fallo el servicio de Registro SP_USUARIO: " + error.getMessage().toString() , Toast.LENGTH_LONG).show();
 
             }
