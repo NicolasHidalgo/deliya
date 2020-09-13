@@ -10,6 +10,7 @@ import helper.Session;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -209,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 
-        //WebServiceLocales();
+        WebServiceLocales();
     }
 
     public void btnRegistrarse(View view) {
@@ -237,15 +238,26 @@ public class LoginActivity extends AppCompatActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             jsonObject = jsonArray.getJSONObject(i);
                             bean = new TiendaBean();
-                            bean.setID(jsonObject.getString("ID"));
-                            bean.setRUC(jsonObject.getString("RUC"));
-                            bean.setNOMBRE(jsonObject.getString("NAME"));
-                            bean.setDESCRIPCION(jsonObject.getString("DESCRIPTION"));
-                            bean.setDIRECCION(jsonObject.getString("ADDRESS"));
-                            bean.setCOD_DISTRITO(jsonObject.getString("DISTRICTS_CODE"));
-                            bean.setCOD_CATEGORIA(jsonObject.getString("CATEGORIES_CODE"));
-                            bean.setLATITUD(jsonObject.getString("LATITUDE"));
-                            bean.setLONGITUD(jsonObject.getString("LONGITUDE"));
+                            bean.setID(jsonObject.getString("storeId"));
+                            bean.setRUC(jsonObject.getString("ruc"));
+                            bean.setRAZON_SOCIAL(jsonObject.getString("name"));
+                            bean.setDESCRIPCION(jsonObject.getString("description"));
+                            bean.setDIRECCION(jsonObject.getString("address"));
+                            bean.setUBIGEO(jsonObject.getString("ubigeo"));
+                            bean.setCOD_CATEGORIA(jsonObject.getString("categoryCode"));
+                            bean.setLATITUD(jsonObject.getString("latitude"));
+                            bean.setLONGITUD(jsonObject.getString("longitude"));
+
+                            String nombre_imagen = jsonObject.getString("image");
+                            nombre_imagen = nombre_imagen.toLowerCase();
+                            int id_imagen = getResources().getIdentifier(nombre_imagen, "drawable", getPackageName());
+                            if (id_imagen == 0){
+                                nombre_imagen = "local_default";
+                                id_imagen = getResources().getIdentifier(nombre_imagen, "drawable", getPackageName());
+                            }
+                            //Drawable drawable = getResources().getDrawable(id);
+                            bean.setIMAGEN_ID(id_imagen);
+
                             tiendas.add(bean);
                             //dbUsuario.insertar(bean);
                         }
