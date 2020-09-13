@@ -1,6 +1,7 @@
 package com.example.deliya;
 
 import androidx.appcompat.app.AppCompatActivity;
+import beans.ProductoBean;
 import beans.TiendaBean;
 import beans.UsuarioBean;
 import db.DatabaseManagerUsuario;
@@ -216,6 +217,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         WebServiceLocales();
+        WebServiceProductos();
     }
 
     public void btnRegistrarse(View view) {
@@ -236,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Toast.makeText(context, "No se encontraron datos SP_EMPRESA", Toast.LENGTH_LONG).show();
                 }else{
                     try {
-                        List<TiendaBean> tiendas = new ArrayList<>();
+                        List<TiendaBean> data = new ArrayList<>();
                         TiendaBean bean  = null;
                         JSONArray jsonArray = new JSONArray(response);
                         JSONObject jsonObject = null;
@@ -260,13 +262,69 @@ public class LoginActivity extends AppCompatActivity {
                                 nombre_imagen = "local_default";
                                 id_imagen = getResources().getIdentifier(nombre_imagen, "drawable", getPackageName());
                             }
-                            //Drawable drawable = getResources().getDrawable(id);
                             bean.setIMAGEN_ID(id_imagen);
 
-                            tiendas.add(bean);
+                            data.add(bean);
                             //dbUsuario.insertar(bean);
                         }
-                        session.setTiendas(tiendas);
+                        session.setTiendas(data);
+
+                    } catch (JSONException e) {
+                        Toast.makeText(context, "Error en el registro json LOCALES: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Error servicio LOCALES: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers =  new HashMap<String, String>();
+                headers.put("Authorization", "Bearer " + session.getToken());
+                return headers;
+            }
+        };
+        requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+
+    public void WebServiceProductos(){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, SERVER + "products", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equals("[]") || response.equals("")){
+                    //Toast.makeText(context, "No se encontraron datos SP_EMPRESA", Toast.LENGTH_LONG).show();
+                }else{
+                    try {
+                        List<ProductoBean> data = new ArrayList<>();
+                        ProductoBean bean  = null;
+                        JSONArray jsonArray = new JSONArray(response);
+                        JSONObject jsonObject = null;
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            jsonObject = jsonArray.getJSONObject(i);
+                            bean = new ProductoBean();
+                            bean.setID(jsonObject.getString("storeId"));
+                            bean.setID_STORE(jsonObject.getString("productsId"));
+                            bean.setSKU(jsonObject.getString("sku"));
+                            bean.setNOMBRE(jsonObject.getString("name"));
+                            bean.setPRECIO(jsonObject.getString("price"));
+                            bean.setDESCRIPCION(jsonObject.getString("shortDescription"));
+                            String nombre_imagen = jsonObject.getString("image");
+                            nombre_imagen = nombre_imagen.toLowerCase();
+                            int id_imagen = getResources().getIdentifier(nombre_imagen, "drawable", getPackageName());
+                            if (id_imagen == 0){
+                                nombre_imagen = "producto_default";
+                                id_imagen = getResources().getIdentifier(nombre_imagen, "drawable", getPackageName());
+                            }
+                            bean.setIMAGEN_ID(id_imagen);
+
+                            data.add(bean);
+                            //dbUsuario.insertar(bean);
+                        }
+                        session.setProductos(data);
 
                     } catch (JSONException e) {
                         Toast.makeText(context, "Error en el registro json LOCALES: " + e.getMessage(), Toast.LENGTH_SHORT).show();

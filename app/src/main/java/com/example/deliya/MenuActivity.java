@@ -3,6 +3,7 @@ package com.example.deliya;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import beans.UsuarioBean;
 import helper.Session;
 
@@ -10,9 +11,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -40,6 +44,26 @@ public class MenuActivity extends AppCompatActivity {
         txtUsuarioNombre.setText(user.getNOMBRES());
 
     }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        List<Fragment> list = fragmentManager.getFragments();
+        String fragmentTag = list.get(list.size() - 1).getClass().getSimpleName();
+
+        if (fragmentTag.equals("LocalesFragment")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+        }
+
+        if (fragmentTag.equals("ProductosFragment")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new LocalesFragment()).commit();
+        }
+
+        //super.onBackPressed();
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {

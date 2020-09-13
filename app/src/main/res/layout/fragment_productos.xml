@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/edit"
@@ -24,7 +24,7 @@
         android:textCursorDrawable="@drawable/color_cursor" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewLocales"
+        android:id="@+id/recyclerViewProductos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

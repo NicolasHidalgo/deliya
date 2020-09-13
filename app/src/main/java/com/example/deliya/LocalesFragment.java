@@ -32,11 +32,9 @@ public class LocalesFragment extends Fragment {
 
     Context context;
     Session session;
-    //List<TiendaBean> listaTienda;
-    ListView lvTienda;
 
-    AdapterLocal adapterLocal;
-    RecyclerView recyclerViewLocal;
+    AdapterLocal adapter;
+    RecyclerView recyclerView;
     List<TiendaBean> listaTienda;
 
     @Nullable
@@ -45,28 +43,31 @@ public class LocalesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_locales, container, false);
         session = new Session(getActivity());
 
-        recyclerViewLocal = view.findViewById(R.id.recyclerViewLocales);
+        recyclerView = view.findViewById(R.id.recyclerViewLocales);
         listaTienda = new ArrayList<>();
         cargarLista();
         mostrarData();
         return view;
     }
 
+
     public void cargarLista(){
         listaTienda = session.getTiendas();
     }
 
     public void mostrarData(){
-        recyclerViewLocal.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterLocal = new AdapterLocal(getContext(), listaTienda);
-        recyclerViewLocal.setAdapter(adapterLocal);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new AdapterLocal(getContext(), listaTienda);
+        recyclerView.setAdapter(adapter);
 
-        adapterLocal.setOnClickListener(new View.OnClickListener(){
+        adapter.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                String nombre = listaTienda.get(recyclerViewLocal.getChildAdapterPosition(v)).getRAZON_SOCIAL();
-                Toast.makeText(getContext(), "Selecciono: " + nombre, Toast.LENGTH_SHORT).show();
+                String Id = listaTienda.get(recyclerView.getChildAdapterPosition(v)).getID();
+                session.setIdStore(Id);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ProductosFragment()).commit();
             }
         });
     }

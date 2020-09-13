@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/imagen_producto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_launcher_background"/>
+
+        <TextView
+            android:id="@+id/nombre_producto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Producto"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/imagen_producto"
+            android:layout_toEndOf="@id/imagen_producto"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/descripcion_producto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripcion"
+            android:layout_below="@id/nombre_producto"
+            android:layout_toRightOf="@id/imagen_producto"
+            android:layout_toEndOf="@id/imagen_producto"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
+
+        <Button
+            android:id="@+id/btnAgregarProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agregar"
+            android:layout_below="@id/descripcion_producto"
+            android:layout_toRightOf="@id/imagen_producto"
+            android:layout_toEndOf="@id/imagen_producto"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/precio_producto"
+            android:layout_width="73dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descripcion_producto"
+            android:layout_marginStart="196dp"
+            android:layout_marginLeft="98dp"
+            android:layout_marginTop="17dp"
+            android:layout_toEndOf="@id/imagen_producto"
+            android:layout_toRightOf="@id/btnAgregarProducto"
+            android:text="S/ #0.00" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

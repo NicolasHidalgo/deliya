@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import beans.ProductoBean;
 import beans.TiendaBean;
 import beans.UsuarioBean;
 
@@ -39,6 +40,14 @@ public class Session {
         return Token;
     }
 
+    public void setIdStore(String Id) {
+        prefs.edit().putString("IdStore", Id).commit();
+    }
+    public String getIdStore() {
+        String data = prefs.getString("IdStore","");
+        return data;
+    }
+
     public void setUsuario(UsuarioBean bean){
         Gson gson = new Gson();
         String json = gson.toJson(bean);
@@ -52,17 +61,30 @@ public class Session {
         return obj;
     }
 
-    public void setTiendas(List<TiendaBean> tiendas){
+    public void setTiendas(List<TiendaBean> data){
         Gson gson = new Gson();
-        String json = gson.toJson(tiendas);
+        String json = gson.toJson(data);
         prefs.edit().putString("Tiendas", json).commit();
     }
     public List<TiendaBean> getTiendas(){
         Gson gson = new Gson();
         String json = prefs.getString("Tiendas", "");
         Type type  = new TypeToken<List<TiendaBean>>(){}.getType();
-        List<TiendaBean> tiendas = gson.fromJson(json, type);
-        return tiendas;
+        List<TiendaBean> data = gson.fromJson(json, type);
+        return data;
+    }
+
+    public void setProductos(List<ProductoBean> data){
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        prefs.edit().putString("Productos", json).commit();
+    }
+    public List<ProductoBean> getProductos(){
+        Gson gson = new Gson();
+        String json = prefs.getString("Productos", "");
+        Type type  = new TypeToken<List<ProductoBean>>(){}.getType();
+        List<ProductoBean> data = gson.fromJson(json, type);
+        return data;
     }
 
 }
