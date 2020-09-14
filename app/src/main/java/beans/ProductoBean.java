@@ -2,6 +2,8 @@ package beans;
 
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 public class ProductoBean {
 
     private String ID;
@@ -70,5 +72,23 @@ public class ProductoBean {
 
     public void setID_STORE(String ID_STORE) {
         this.ID_STORE = ID_STORE;
+    }
+
+    public ProductoBean getProducto(String IdProducto, List<ProductoBean> listaProductos){
+        ProductoBean bean = null;
+        for (ProductoBean obj: listaProductos) {
+            String _id = obj.getID();
+            if (_id.equals(IdProducto)){
+                bean = new ProductoBean();
+                bean.setID(obj.getID());
+                bean.setID_STORE(obj.getID_STORE());
+                bean.setNOMBRE(obj.getNOMBRE());
+                bean.setDESCRIPCION(obj.getDESCRIPCION());
+                bean.setSKU(obj.getSKU());
+                bean.setPRECIO(obj.getPRECIO());
+                bean.setIMAGEN_ID(obj.getIMAGEN_ID());
+            }
+        }
+        return bean;
     }
 }

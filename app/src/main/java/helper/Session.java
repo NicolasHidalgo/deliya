@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import beans.CarritoDetalleBean;
 import beans.ProductoBean;
 import beans.TiendaBean;
 import beans.UsuarioBean;
@@ -54,6 +55,13 @@ public class Session {
         String data = prefs.getString("IdProducto","");
         return data;
     }
+    public void setIdProductoSeleccionado(String Id) {
+        prefs.edit().putString("IdProductoSeleccionado", Id).commit();
+    }
+    public String getIdProductoSeleccionado() {
+        String data = prefs.getString("IdProductoSeleccionado","");
+        return data;
+    }
 
     public void setUsuario(UsuarioBean bean){
         Gson gson = new Gson();
@@ -91,6 +99,19 @@ public class Session {
         String json = prefs.getString("Productos", "");
         Type type  = new TypeToken<List<ProductoBean>>(){}.getType();
         List<ProductoBean> data = gson.fromJson(json, type);
+        return data;
+    }
+
+    public void setCarritoDetalle(List<CarritoDetalleBean> data){
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        prefs.edit().putString("CarritoDetalle", json).commit();
+    }
+    public List<CarritoDetalleBean> getCarritoDetalle(){
+        Gson gson = new Gson();
+        String json = prefs.getString("CarritoDetalle", "");
+        Type type  = new TypeToken<List<CarritoDetalleBean>>(){}.getType();
+        List<CarritoDetalleBean> data = gson.fromJson(json, type);
         return data;
     }
 

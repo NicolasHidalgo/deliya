@@ -29,9 +29,10 @@ public class ProductoSeleccionadoFragment extends Fragment {
     AdapterProducto adapter;
     RecyclerView recyclerView;
     List<ProductoBean> listaProductos;
+    ProductoBean productoBean;
 
     ImageView imagenProductoSeleccionado;
-    TextView txtProductoNombreSeleccionado, txtProductoDescripcionSeleccionado;
+    TextView txtIdProductoSeleccionado,txtProductoNombreSeleccionado, txtProductoDescripcionSeleccionado;
     Button btnAgregarProducto;
 
     @Nullable
@@ -40,17 +41,20 @@ public class ProductoSeleccionadoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_producto_seleccionado, container, false);
         session = new Session(getActivity());
 
+        productoBean = new ProductoBean();
         imagenProductoSeleccionado = view.findViewById(R.id.imagenProductoSeleccionado);
+        txtIdProductoSeleccionado = view.findViewById(R.id.txtIdProductoSeleccionado);
         txtProductoNombreSeleccionado = view.findViewById(R.id.txtProductoNombreSeleccionado);
         txtProductoDescripcionSeleccionado = view.findViewById(R.id.txtProductoDescripcionSeleccionado);
         btnAgregarProducto = view.findViewById(R.id.btnAgregarProducto);
 
         String IdProducto = session.getIdProducto();
         listaProductos = session.getProductos();
-        ProductoBean bean = getProducto(IdProducto);
+        ProductoBean bean = productoBean.getProducto(IdProducto, listaProductos);
 
         if (bean != null){
             imagenProductoSeleccionado.setImageResource(bean.getIMAGEN_ID());
+            txtIdProductoSeleccionado.setText(bean.getID());
             txtProductoNombreSeleccionado.setText(bean.getNOMBRE());
             txtProductoDescripcionSeleccionado.setText(bean.getDESCRIPCION());
 
@@ -58,21 +62,7 @@ public class ProductoSeleccionadoFragment extends Fragment {
         return view;
     }
 
-    public ProductoBean getProducto(String IdProducto){
-        ProductoBean bean = null;
-        for (ProductoBean obj: listaProductos) {
-            String _id = obj.getID();
-            if (_id.equals(IdProducto)){
-                bean = new ProductoBean();
-                bean.setID(obj.getID());
-                bean.setID_STORE(obj.getID_STORE());
-                bean.setNOMBRE(obj.getNOMBRE());
-                bean.setDESCRIPCION(obj.getDESCRIPCION());
-                bean.setSKU(obj.getSKU());
-                bean.setPRECIO(obj.getPRECIO());
-                bean.setIMAGEN_ID(obj.getIMAGEN_ID());
-            }
-        }
-        return bean;
-    }
+
+
+
 }

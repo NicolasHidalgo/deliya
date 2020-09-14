@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import beans.CarritoDetalleBean;
+import beans.ProductoBean;
 import beans.UsuarioBean;
 import helper.Session;
 
@@ -13,9 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
@@ -23,12 +27,15 @@ public class MenuActivity extends AppCompatActivity {
     TextView txtUsuarioNombre;
     private Session session;
     Context context;
+    TextView txtIdProductoSeleccionado;
+    ProductoBean productoBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        productoBean = new ProductoBean();
         session = new Session(this);
         context = this;
 
@@ -59,6 +66,11 @@ public class MenuActivity extends AppCompatActivity {
         if (fragmentTag.equals("ProductosFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new LocalesFragment()).commit();
+        }
+
+        if (fragmentTag.equals("ProductoSeleccionadoFragment")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new ProductosFragment()).commit();
         }
 
         //super.onBackPressed();
@@ -95,6 +107,25 @@ public class MenuActivity extends AppCompatActivity {
         Fragment selectedFragment = null;
         selectedFragment = new LocalesFragment();
         getSupportFragmentManager() .beginTransaction().replace(R.id.fragment_container,
+                selectedFragment).commit();
+    }
+
+    public void btnAgregarProducto(View view){
+        txtIdProductoSeleccionado = findViewById(R.id.txtIdProductoSeleccionado);
+        session.setIdProductoSeleccionado(txtIdProductoSeleccionado.getText().toString());
+
+        ProductoBean producto = productoBean.getProducto(session.getIdProductoSeleccionado(),session.getProductos());
+        List<CarritoDetalleBean> listaCarrito = new ArrayList<>();
+        CarritoDetalleBean carritoDetalleBean = new CarritoDetalleBean();
+        carritoDetalleBean.setProductoBean(producto);
+        carritoDetalleBean.setCantidad(1);
+        listaCarrito.add(carritoDetalleBean);
+
+        session.setCarritoDetalle(listaCarrito);
+
+        Fragment selectedFragment = null;
+        selectedFragment = new CarritoFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).commit();
     }
 }
