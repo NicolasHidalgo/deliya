@@ -306,8 +306,8 @@ public class LoginActivity extends AppCompatActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             jsonObject = jsonArray.getJSONObject(i);
                             bean = new ProductoBean();
-                            bean.setID(jsonObject.getString("storeId"));
-                            bean.setID_STORE(jsonObject.getString("productsId"));
+                            bean.setID(jsonObject.getString("productsId"));
+                            bean.setID_STORE(jsonObject.getString("storeId"));
                             bean.setSKU(jsonObject.getString("sku"));
                             bean.setNOMBRE(jsonObject.getString("name"));
                             bean.setPRECIO(jsonObject.getString("price"));

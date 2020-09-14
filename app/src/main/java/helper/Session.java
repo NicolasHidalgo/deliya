@@ -47,6 +47,13 @@ public class Session {
         String data = prefs.getString("IdStore","");
         return data;
     }
+    public void setIdProducto(String Id) {
+        prefs.edit().putString("IdProducto", Id).commit();
+    }
+    public String getIdProducto() {
+        String data = prefs.getString("IdProducto","");
+        return data;
+    }
 
     public void setUsuario(UsuarioBean bean){
         Gson gson = new Gson();

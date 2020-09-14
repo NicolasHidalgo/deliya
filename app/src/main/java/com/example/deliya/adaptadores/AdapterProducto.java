@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.deliya.R;
 
@@ -17,13 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import beans.ProductoBean;
 import beans.TiendaBean;
 
-public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHolder> implements View.OnClickListener {
+public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHolder> implements RecyclerViewClickListener {
 
     LayoutInflater inflater;
     List<ProductoBean> model;
 
     //listener
-    private View.OnClickListener listener;
+    private RecyclerViewClickListener listener;
 
     public AdapterProducto(Context context, List<ProductoBean> model){
         this.inflater = LayoutInflater.from(context);
@@ -34,11 +36,11 @@ public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHo
     @Override
     public AdapterProducto.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.lista_productos, parent, false);
-        view.setOnClickListener(this);
+        //view.setOnClickListener(this);
         return new AdapterProducto.ViewHolder(view);
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
+    public void setOnClickListener(RecyclerViewClickListener listener){
         this.listener = listener;
     }
 
@@ -56,6 +58,7 @@ public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHo
         holder.descripcion.setText(descripcion);
         holder.precio.setText("S/ " + precioformateado);
         holder.imagen.setImageResource(imagen);
+        holder.getAdapterPosition();
 
     }
 
@@ -65,17 +68,25 @@ public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHo
         return model.size();
     }
 
-    @Override
+    /*@Override
     public void onClick(View v) {
         if (listener != null){
             listener.onClick(v);
         }
+    }*/
+
+    @Override
+    public void onClick(View view, int position) {
+        if (listener != null){
+            listener.onClick(view, position);
+        }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView nombres, descripcion, precio;
         ImageView imagen;
+        Button btnAgregarProducto;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -84,6 +95,15 @@ public class AdapterProducto extends RecyclerView.Adapter<AdapterProducto.ViewHo
             precio = itemView.findViewById(R.id.precio_producto);
             imagen = itemView.findViewById(R.id.imagen_producto);
 
+            btnAgregarProducto = itemView.findViewById(R.id.btnAgregarProducto);
+            btnAgregarProducto.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            listener.onClick(v, getAdapterPosition());
         }
 
     }

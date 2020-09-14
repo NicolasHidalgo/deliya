@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.deliya.adaptadores.AdapterLocal;
 import com.example.deliya.adaptadores.AdapterProducto;
+import com.example.deliya.adaptadores.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +72,19 @@ public class ProductosFragment extends Fragment {
         adapter = new AdapterProducto(getContext(), listaProductos);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnClickListener(new View.OnClickListener(){
+        adapter.setOnClickListener(new RecyclerViewClickListener(){
 
             @Override
-            public void onClick(View v) {
-                String nombre = listaProductos.get(recyclerView.getChildAdapterPosition(v)).getNOMBRE();
-                Toast.makeText(getContext(), "Selecciono: " + nombre, Toast.LENGTH_SHORT).show();
-
+            public void onClick(View view, int position) {
+                String Id = listaProductos.get(position).getID();
+                session.setIdProducto(Id);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ProductoSeleccionadoFragment()).commit();
             }
+
+
         });
+
     }
 
 }
