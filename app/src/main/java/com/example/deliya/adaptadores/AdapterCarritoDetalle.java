@@ -14,15 +14,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import beans.CarritoDetalleBean;
-import beans.TiendaBean;
 
-public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDetalle.ViewHolder> implements View.OnClickListener {
+public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDetalle.ViewHolder> implements RecyclerViewClickListener {
 
     LayoutInflater inflater;
     List<CarritoDetalleBean> model;
 
     //listener
-    private View.OnClickListener listener;
+    private RecyclerViewClickListener listener;
 
     public AdapterCarritoDetalle(Context context, List<CarritoDetalleBean> model){
         this.inflater = LayoutInflater.from(context);
@@ -33,11 +32,11 @@ public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDe
     @Override
     public AdapterCarritoDetalle.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.lista_carrito, parent, false);
-        view.setOnClickListener(this);
+        //view.setOnClickListener(this);
         return new AdapterCarritoDetalle.ViewHolder(view);
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
+    public void setOnClickListener(RecyclerViewClickListener listener){
         this.listener = listener;
     }
 
@@ -45,9 +44,15 @@ public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDe
     public void onBindViewHolder(@NonNull AdapterCarritoDetalle.ViewHolder holder, int position) {
         String nombre = model.get(position).getProductoBean().getNOMBRE();
         String precio = model.get(position).getProductoBean().getPRECIO();
+        String cantidad = String.valueOf(model.get(position).getCantidad());
+
+        Double _precio = Double.parseDouble(precio);
+        String precioformateado = String.format("%.2f", _precio);
+
         int imagen = model.get(position).getProductoBean().getIMAGEN_ID();
         holder.nombres.setText(nombre);
-        holder.precio.setText(precio);
+        holder.precio.setText("S/ " + precioformateado);
+        holder.cantidad.setText(cantidad);
         holder.imagen.setImageResource(imagen);
 
     }
@@ -59,23 +64,34 @@ public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDe
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v, int position) {
         if (listener != null){
-            listener.onClick(v);
+            listener.onClick(v, position);
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView nombres, precio;
-        ImageView imagen;
+        TextView nombres, precio, cantidad;
+        ImageView imagen, btnMas, btnMenos;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             nombres = itemView.findViewById(R.id.nombre_carrito);
             precio = itemView.findViewById(R.id.precio_carrito);
+            cantidad = itemView.findViewById(R.id.quantity_carrito);
             imagen = itemView.findViewById(R.id.imagen_carrito);
+            btnMas = itemView.findViewById(R.id.btnMas);
+            btnMenos = itemView.findViewById(R.id.btnMenos);
 
+            btnMenos.setOnClickListener(this);
+            btnMas.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onClick(v, getAdapterPosition());
         }
 
     }

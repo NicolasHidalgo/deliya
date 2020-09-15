@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.deliya.adaptadores.AdapterCarritoDetalle;
 import com.example.deliya.adaptadores.AdapterLocal;
+import com.example.deliya.adaptadores.RecyclerViewClickListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +57,34 @@ public class CarritoFragment extends Fragment {
         adapter = new AdapterCarritoDetalle(getContext(), listaCarritoDetalle);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnClickListener(new View.OnClickListener(){
+        adapter.setOnClickListener(new RecyclerViewClickListener(){
 
+            TextView cant;
             @Override
-            public void onClick(View v) {
-                /*String Id = listaCarritoDetalle.get(recyclerView.getChildAdapterPosition(v)).getID();
-                session.setIdStore(Id);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProductosFragment()).commit();*/
+            public void onClick(View view, int position) {
+                //Integer cantidad = listaCarritoDetalle.get(position).getCantidad();
+                //View v = recyclerView.getLayoutManager().findViewByPosition(position);
+                View v = recyclerView.findViewHolderForAdapterPosition(position).itemView;
+                cant = v.findViewById(R.id.quantity_carrito);
+                String cantidad = cant.getText().toString();
+                Integer quantity = Integer.parseInt(cantidad);
+
+                switch (view.getId()){
+                    case R.id.btnMas:
+                        quantity = quantity + 1;
+                        break;
+                    case R.id.btnMenos:
+                        if (quantity <= 1){
+                            break;
+                        }
+                        quantity = quantity - 1;
+                        break;
+                }
+
+                cant.setText(quantity.toString());
             }
+
+
         });
     }
 

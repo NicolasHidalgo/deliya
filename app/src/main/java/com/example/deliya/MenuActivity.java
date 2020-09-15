@@ -73,6 +73,16 @@ public class MenuActivity extends AppCompatActivity {
                     new ProductosFragment()).commit();
         }
 
+        if (fragmentTag.equals("CarritoFragment")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new ProductoSeleccionadoFragment()).commit();
+        }
+
+        if (fragmentTag.equals("ResumenPedidoFragment")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new CarritoFragment()).commit();
+        }
+
         //super.onBackPressed();
     }
 
@@ -125,6 +135,13 @@ public class MenuActivity extends AppCompatActivity {
 
         Fragment selectedFragment = null;
         selectedFragment = new CarritoFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                selectedFragment).commit();
+    }
+
+    public void btnContinuarAResumenPedido(View view){
+        Fragment selectedFragment = null;
+        selectedFragment = new ResumenPedidoFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).commit();
     }
