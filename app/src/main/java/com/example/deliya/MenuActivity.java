@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import beans.CarritoDetalleBean;
 import beans.ProductoBean;
 import beans.UsuarioBean;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,29 +64,23 @@ public class MenuActivity extends AppCompatActivity {
         if (fragmentTag.equals("LocalesFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
-        }
-
-        if (fragmentTag.equals("ProductosFragment")){
+        }else if (fragmentTag.equals("ProductosFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new LocalesFragment()).commit();
-        }
-
-        if (fragmentTag.equals("ProductoSeleccionadoFragment")){
+        }else if (fragmentTag.equals("ProductoSeleccionadoFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new ProductosFragment()).commit();
-        }
-
-        if (fragmentTag.equals("CarritoFragment")){
+        }else if (fragmentTag.equals("CarritoFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new ProductoSeleccionadoFragment()).commit();
-        }
-
-        if (fragmentTag.equals("ResumenPedidoFragment")){
+        }else if (fragmentTag.equals("ResumenPedidoFragment")){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new CarritoFragment()).commit();
+        }else{
+            super.onBackPressed();
         }
 
-        //super.onBackPressed();
+
     }
 
 
@@ -97,11 +94,8 @@ public class MenuActivity extends AppCompatActivity {
                         case R.id.nav_home:
                             selectedFragment = new HomeFragment();
                             break;
-                        case R.id.nav_buscar:
-                            selectedFragment = new HomeFragment();
-                            break;
-                        case R.id.nav_promo:
-                            selectedFragment = new HomeFragment();
+                        case R.id.nav_carrito:
+                            selectedFragment = new CarritoFragment();
                             break;
                         case R.id.nav_cuenta:
                             selectedFragment = new HomeFragment();
@@ -113,25 +107,68 @@ public class MenuActivity extends AppCompatActivity {
                 }
             };
 
-    public void btnComida(View view){
+    public void btnFOOD(View view){
+        session.setCategoria("FOOD");
         Fragment selectedFragment = null;
         selectedFragment = new LocalesFragment();
         getSupportFragmentManager() .beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).commit();
     }
 
+    public void btnSeleccionarCategoria(View view){
+
+        switch (view.getId()){
+            case R.id.imgFOOD:
+                session.setCategoria("FOOD");
+                break;
+            case R.id.imgSTORES:
+                session.setCategoria("STORES");
+                break;
+            case R.id.imgDRUGSTORE:
+                session.setCategoria("DRUGSTORE");
+                break;
+            case R.id.imgOTHERS:
+                session.setCategoria("OTHERS");
+                break;
+
+        }
+        Fragment selectedFragment = null;
+        selectedFragment = new LocalesFragment();
+        getSupportFragmentManager() .beginTransaction().replace(R.id.fragment_container,
+                selectedFragment).commit();
+    }
+
+
     public void btnAgregarProducto(View view){
+
+        List<CarritoDetalleBean> listaCarrito;
+        if (session.getCarritoDetalle() != null){
+            listaCarrito = session.getCarritoDetalle();
+        }else{
+            listaCarrito = new ArrayList<>();
+        }
+
         txtIdProductoSeleccionado = findViewById(R.id.txtIdProductoSeleccionado);
         session.setIdProductoSeleccionado(txtIdProductoSeleccionado.getText().toString());
 
-        ProductoBean producto = productoBean.getProducto(session.getIdProductoSeleccionado(),session.getProductos());
-        List<CarritoDetalleBean> listaCarrito = new ArrayList<>();
-        CarritoDetalleBean carritoDetalleBean = new CarritoDetalleBean();
-        carritoDetalleBean.setProductoBean(producto);
-        carritoDetalleBean.setCantidad(1);
-        listaCarrito.add(carritoDetalleBean);
+        String IdProducto = session.getIdProductoSeleccionado();
+        boolean esRepetido = false;
+        for (CarritoDetalleBean obj:listaCarrito) {
+            if (obj.getProductoBean().getID().equals(IdProducto)){
+                esRepetido = true;
+            }
+        }
 
-        session.setCarritoDetalle(listaCarrito);
+        if (!esRepetido){
+            ProductoBean producto = productoBean.getProducto(IdProducto,session.getProductos());
+
+            CarritoDetalleBean carritoDetalleBean = new CarritoDetalleBean();
+            carritoDetalleBean.setProductoBean(producto);
+            carritoDetalleBean.setCantidad(1);
+            listaCarrito.add(carritoDetalleBean);
+
+            session.setCarritoDetalle(listaCarrito);
+        }
 
         Fragment selectedFragment = null;
         selectedFragment = new CarritoFragment();
@@ -140,6 +177,25 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void btnContinuarAResumenPedido(View view){
+        TextView cant, price;
+        Double totalPagar = 0.0;
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewCarrito);
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View v = recyclerView.findViewHolderForAdapterPosition(i).itemView;
+            cant = v.findViewById(R.id.quantity_carrito);
+            price = v.findViewById(R.id.precio_carrito);
+
+            String precio = price.getText().toString();
+            String number = precio.replaceAll("[^0-9?!\\.]","");
+            Double dprecio = Double.parseDouble(number);
+            Integer cantidad = Integer.parseInt(cant.getText().toString());
+
+            Double importe = dprecio * cantidad;
+            totalPagar = totalPagar + importe;
+        }
+        session.setTotalPagar(totalPagar.toString());
+
+
         Fragment selectedFragment = null;
         selectedFragment = new ResumenPedidoFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

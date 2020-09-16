@@ -81,6 +81,8 @@ public class CarritoFragment extends Fragment {
                         break;
                 }
 
+                listaCarritoDetalle.get(position).setCantidad(quantity);
+                session.setCarritoDetalle(listaCarritoDetalle);
                 cant.setText(quantity.toString());
             }
 

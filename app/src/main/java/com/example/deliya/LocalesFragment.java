@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import beans.ProductoBean;
 import beans.TiendaBean;
 import helper.Session;
 
@@ -52,7 +53,27 @@ public class LocalesFragment extends Fragment {
 
 
     public void cargarLista(){
-        listaTienda = session.getTiendas();
+        String Categoria = session.getCategoria();
+        List<TiendaBean> data = session.getTiendas();
+        TiendaBean bean = null;
+        for (TiendaBean obj: data) {
+            if (obj.getCOD_CATEGORIA().equals(Categoria)){
+                bean = new TiendaBean();
+                bean.setID(obj.getID());
+                bean.setRUC(obj.getRUC());
+                bean.setRAZON_SOCIAL(obj.getRAZON_SOCIAL());
+                bean.setDESCRIPCION(obj.getDESCRIPCION());
+                bean.setDIRECCION(obj.getDIRECCION());
+                bean.setEMAIL(obj.getEMAIL());
+                bean.setTELEFONO(obj.getTELEFONO());
+                bean.setUBIGEO(obj.getUBIGEO());
+                bean.setCOD_CATEGORIA(obj.getCOD_CATEGORIA());
+                bean.setLATITUD(obj.getLATITUD());
+                bean.setLONGITUD(obj.getLONGITUD());
+                bean.setIMAGEN_ID(obj.getIMAGEN_ID());
+                listaTienda.add(obj);
+            }
+        }
     }
 
     public void mostrarData(){

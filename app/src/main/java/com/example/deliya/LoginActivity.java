@@ -182,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                         session.setUsuario(bean);
                         session.setToken(token);
 
+                        session.setCarritoDetalle(null);
                         Intent k = new Intent(getApplicationContext(), MenuActivity.class);
                         startActivity(k);
                     }

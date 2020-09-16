@@ -33,6 +33,14 @@ public class Session {
         return IdUsuario;
     }
 
+    public void setCategoria(String valor) {
+        prefs.edit().putString("Categoria", valor).commit();
+    }
+    public String getCategoria() {
+        String valor = prefs.getString("Categoria","");
+        return valor;
+    }
+
     public void setToken(String Token) {
         prefs.edit().putString("Token", Token).commit();
     }
@@ -113,6 +121,14 @@ public class Session {
         Type type  = new TypeToken<List<CarritoDetalleBean>>(){}.getType();
         List<CarritoDetalleBean> data = gson.fromJson(json, type);
         return data;
+    }
+
+    public void setTotalPagar(String valor) {
+        prefs.edit().putString("TotalPagar", valor).commit();
+    }
+    public String getTotalPagar() {
+        String valor = prefs.getString("TotalPagar","");
+        return valor;
     }
 
 }

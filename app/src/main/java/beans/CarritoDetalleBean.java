@@ -3,7 +3,7 @@ package beans;
 public class CarritoDetalleBean {
 
     private ProductoBean productoBean;
-    private int cantidad;
+    private int cantidad = 1;
 
     public CarritoDetalleBean(){
 
