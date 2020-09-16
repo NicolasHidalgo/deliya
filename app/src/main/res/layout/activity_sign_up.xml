@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="40dp">
+        android:padding="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +21,6 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:gravity="center_horizontal"
                 android:text="Registrarse"
                 android:textColor="#020202"
@@ -31,22 +30,22 @@
                 android:id="@+id/textPersonName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:ems="10"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
                 android:digits="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÁáÂâÃãÀàÇçÉéÊêÍíÓóÔôÕõÚú "
+                android:ems="10"
                 android:hint="Nombres"
                 android:inputType="textPersonName"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:backgroundTint="@color/colorAzul"/>
+                android:textCursorDrawable="@drawable/color_cursor" />
 
             <EditText
                 android:id="@+id/textPersonLastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:backgroundTint="@color/colorAzul"
-                android:ems="10"
                 android:digits="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÁáÂâÃãÀàÇçÉéÊêÍíÓóÔôÕõÚú "
+                android:ems="10"
                 android:hint="Apellidos"
                 android:inputType="textPersonName"
                 android:textCursorDrawable="@drawable/color_cursor" />
@@ -55,62 +54,72 @@
                 android:id="@+id/textPersonPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:ems="10"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
                 android:digits="0,1,2,3,4,5,6,7,8,9"
-                android:maxLength="9"
+                android:ems="10"
                 android:hint="Telefono"
                 android:inputType="number"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:backgroundTint="@color/colorAzul"/>
+                android:maxLength="9"
+                android:textCursorDrawable="@drawable/color_cursor" />
 
             <EditText
                 android:id="@+id/textPersonEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
                 android:ems="10"
                 android:hint="Correo"
                 android:inputType="textEmailAddress"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:backgroundTint="@color/colorAzul"/>
+                android:textCursorDrawable="@drawable/color_cursor" />
+
+            <EditText
+                android:id="@+id/textDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
+                android:ems="10"
+                android:hint="Direccion"
+                android:textCursorDrawable="@drawable/color_cursor" />
 
             <EditText
                 android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:backgroundTint="@color/colorAzul"/>
+                android:textCursorDrawable="@drawable/color_cursor" />
 
             <EditText
                 android:id="@+id/txtConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorAzul"
                 android:ems="10"
                 android:hint="Confirmar Contraseña"
                 android:inputType="textPassword"
-                android:textCursorDrawable="@drawable/color_cursor"
-                android:backgroundTint="@color/colorAzul"/>
+                android:textCursorDrawable="@drawable/color_cursor" />
 
             <CheckBox
                 android:id="@+id/chbxTermCondition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Acepto los términos y condiciones"
-                android:buttonTint="@color/colorAzul"/>
+                android:layout_margin="5dp"
+                android:buttonTint="@color/colorAzul"
+                android:text="Acepto los términos y condiciones" />
 
             <Button
                 android:id="@+id/btnSignUp"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@color/colorAzul"
                 android:onClick="btnSignUp"
                 android:text="Registrarse"

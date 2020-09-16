@@ -12,6 +12,7 @@ import helper.Session;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -31,7 +32,7 @@ public class MenuActivity extends AppCompatActivity {
     TextView txtUsuarioNombre;
     private Session session;
     Context context;
-    TextView txtIdProductoSeleccionado;
+    TextView txtIdProductoSeleccionado, txtDireccionMenu;
     ProductoBean productoBean;
 
     @Override
@@ -50,9 +51,11 @@ public class MenuActivity extends AppCompatActivity {
                 new HomeFragment()).commit();
 
         txtUsuarioNombre = findViewById(R.id.txtUsuarioNombre);
+        txtDireccionMenu = findViewById(R.id.txtDireccionMenu);
         UsuarioBean user = session.getUsuario();
 
         txtUsuarioNombre.setText(user.getNOMBRES());
+        txtDireccionMenu.setText(user.getDIRECCION());
 
     }
 
@@ -222,5 +225,19 @@ public class MenuActivity extends AppCompatActivity {
 
     public void btnRealizarPedido(View view){
         Toast.makeText(this,"Pedido realizado con éxito.", Toast.LENGTH_LONG).show();
+
+        final int millisUntilLaunch = 5000;
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Fragment selectedFragment = null;
+                selectedFragment = new HomeFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        selectedFragment).commit();
+            }
+        }, millisUntilLaunch);
+
     }
 }

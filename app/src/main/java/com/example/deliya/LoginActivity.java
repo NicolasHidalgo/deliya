@@ -36,6 +36,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -48,6 +49,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -170,6 +172,11 @@ public class LoginActivity extends AppCompatActivity {
                         String iat = jwt.getClaim("iat").asString();
                         String exp = jwt.getClaim("exp").asString();
 
+
+                        Map<String,String> context = jwt.getClaim("address").asObject(Map.class);
+                        String direccion = context.get("address");
+                        String ubigeo = context.get("ubigeo");
+
                         bean = new UsuarioBean();
                         bean.setID(Id);
                         bean.setCORREO(Email);
@@ -177,6 +184,8 @@ public class LoginActivity extends AppCompatActivity {
                         bean.setNOMBRES(Nombres);
                         bean.setAPELLIDOS(Apellidos);
                         bean.setTELEFONO(Telefono);
+                        bean.setDIRECCION(direccion);
+                        bean.setUBIGEO(ubigeo);
                         bean.setIAT(iat);
                         bean.setEXP(exp);
                         session.setUsuario(bean);

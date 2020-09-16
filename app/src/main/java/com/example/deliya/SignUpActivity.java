@@ -46,7 +46,7 @@ import helper.Session;
 public class SignUpActivity extends AppCompatActivity {
 
     Button btnSignUp;
-    EditText textPersonName, textPersonLastname, textPersonPhone, textPersonEmail,
+    EditText textPersonName, textPersonLastname, textPersonPhone, textPersonEmail, textDireccion,
             txtPassword, txtConfirmPassword;
     CheckBox chbxTermCondition;
     Context context;
@@ -96,6 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
         textPersonLastname = (EditText) findViewById(R.id.textPersonLastname);
         textPersonPhone = (EditText) findViewById(R.id.textPersonPhone);
         textPersonEmail = (EditText) findViewById(R.id.textPersonEmail);
+        textDireccion = (EditText) findViewById(R.id.textDireccion);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         txtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPassword);
         chbxTermCondition = (CheckBox) findViewById(R.id.chbxTermCondition);
@@ -104,6 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
         final String Lastname = textPersonLastname.getText().toString();
         final String Phone = textPersonPhone.getText().toString();
         final String Email = textPersonEmail.getText().toString();
+        final String Direccion = textDireccion.getText().toString();
         final String Password = txtPassword.getText().toString();
         final String ConfirmPassword = txtConfirmPassword.getText().toString();
         final Boolean TermCondition = chbxTermCondition.isChecked();
@@ -125,6 +127,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (Email.isEmpty()){
             Toast.makeText(this, "Debe ingresar el campo email", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (Direccion.isEmpty()){
+            Toast.makeText(this, "Debe ingresar el campo direccion", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -192,6 +199,16 @@ public class SignUpActivity extends AppCompatActivity {
                 parametros.put("cellphone",Phone);
                 parametros.put("userTypeCode","CUST");
                 parametros.put("email",Email);
+
+                JSONObject address = new JSONObject();
+                try {
+                    address.put("address", Direccion);
+                    address.put("ubigeo", "150116");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                parametros.put("address", address.toString());
                 parametros.put("password",Password);
                 return parametros;
             }

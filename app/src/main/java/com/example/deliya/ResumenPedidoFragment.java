@@ -17,13 +17,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import beans.ProductoBean;
+import beans.UsuarioBean;
 import helper.Session;
 
 public class ResumenPedidoFragment extends Fragment {
 
     Context context;
     Session session;
-    TextView txtTotalPagar;
+    TextView txtTotalPagar, txtDireccionPedido;
 
     @Nullable
     @Override
@@ -33,6 +34,11 @@ public class ResumenPedidoFragment extends Fragment {
 
         txtTotalPagar = view.findViewById(R.id.txtTotalPagar);
         txtTotalPagar.setText("S/. " + session.getTotalPagar());
+
+        txtDireccionPedido = view.findViewById(R.id.txtDireccionPedido);
+        UsuarioBean user = session.getUsuario();
+
+        txtDireccionPedido.setText("Calle " + user.getDIRECCION());
 
         return view;
     }

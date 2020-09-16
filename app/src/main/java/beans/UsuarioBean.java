@@ -10,6 +10,8 @@ public class UsuarioBean {
     private String TYPE_CODE;
     private String IAT;
     private String EXP;
+    private String DIRECCION;
+    private String UBIGEO;
 
     public UsuarioBean(){
 
@@ -77,5 +79,21 @@ public class UsuarioBean {
 
     public void setEXP(String EXP) {
         this.EXP = EXP;
+    }
+
+    public String getDIRECCION() {
+        return DIRECCION;
+    }
+
+    public void setDIRECCION(String DIRECCION) {
+        this.DIRECCION = DIRECCION;
+    }
+
+    public String getUBIGEO() {
+        return UBIGEO;
+    }
+
+    public void setUBIGEO(String UBIGEO) {
+        this.UBIGEO = UBIGEO;
     }
 }
