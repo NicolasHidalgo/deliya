@@ -73,7 +73,7 @@ public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDe
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView nombres, precio, cantidad;
-        ImageView imagen, btnMas, btnMenos;
+        ImageView imagen, btnMas, btnMenos, btnRemoveItem;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -83,9 +83,11 @@ public class AdapterCarritoDetalle extends RecyclerView.Adapter<AdapterCarritoDe
             imagen = itemView.findViewById(R.id.imagen_carrito);
             btnMas = itemView.findViewById(R.id.btnMas);
             btnMenos = itemView.findViewById(R.id.btnMenos);
+            btnRemoveItem = itemView.findViewById(R.id.imgRemoveItem);
 
             btnMenos.setOnClickListener(this);
             btnMas.setOnClickListener(this);
+            btnRemoveItem.setOnClickListener(this);
 
         }
 

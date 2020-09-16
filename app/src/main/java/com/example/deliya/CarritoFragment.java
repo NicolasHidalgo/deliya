@@ -55,7 +55,11 @@ public class CarritoFragment extends Fragment {
     public void mostrarData(){
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdapterCarritoDetalle(getContext(), listaCarritoDetalle);
-        recyclerView.setAdapter(adapter);
+        if (listaCarritoDetalle == null){
+            recyclerView.setAdapter(null);
+        }else{
+            recyclerView.setAdapter(adapter);
+        }
 
         adapter.setOnClickListener(new RecyclerViewClickListener(){
 
@@ -64,6 +68,16 @@ public class CarritoFragment extends Fragment {
             public void onClick(View view, int position) {
                 //Integer cantidad = listaCarritoDetalle.get(position).getCantidad();
                 //View v = recyclerView.getLayoutManager().findViewByPosition(position);
+
+                switch (view.getId()){
+                    case R.id.imgRemoveItem:
+                        listaCarritoDetalle.remove(position);
+                        session.setCarritoDetalle(listaCarritoDetalle);
+                        adapter.notifyDataSetChanged();
+                        return;
+                        //break;
+                }
+
                 View v = recyclerView.findViewHolderForAdapterPosition(position).itemView;
                 cant = v.findViewById(R.id.quantity_carrito);
                 String cantidad = cant.getText().toString();

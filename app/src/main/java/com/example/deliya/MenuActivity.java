@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.deliya.adaptadores.AdapterCarritoDetalle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.w3c.dom.Text;
@@ -176,7 +177,24 @@ public class MenuActivity extends AppCompatActivity {
                 selectedFragment).commit();
     }
 
+    public void btnVaciarCarrito(View view){
+
+        if (session.getCarritoDetalle() == null){
+            Toast.makeText(this,"Su carrito ya está vacío.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        session.setCarritoDetalle(null);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewCarrito);
+        recyclerView.setAdapter(null);
+    }
     public void btnContinuarAResumenPedido(View view){
+
+        if (session.getCarritoDetalle() == null){
+            Toast.makeText(this,"Su carrito está vacío. No puede continuar", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         TextView cant, price;
         Double totalPagar = 0.0;
         RecyclerView recyclerView = findViewById(R.id.recyclerViewCarrito);
@@ -200,5 +218,9 @@ public class MenuActivity extends AppCompatActivity {
         selectedFragment = new ResumenPedidoFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).commit();
+    }
+
+    public void btnRealizarPedido(View view){
+        Toast.makeText(this,"Pedido realizado con éxito.", Toast.LENGTH_LONG).show();
     }
 }
