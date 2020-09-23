@@ -7,25 +7,52 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import beans.CarritoDetalleBean;
 import beans.ProductoBean;
+import beans.TestBean;
 import beans.UsuarioBean;
 import helper.Session;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.deliya.adaptadores.AdapterCarritoDetalle;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -34,6 +61,10 @@ public class MenuActivity extends AppCompatActivity {
     Context context;
     TextView txtIdProductoSeleccionado, txtDireccionMenu;
     ProductoBean productoBean;
+
+    public static final String SERVER = "http://3.137.143.14:3000/";
+    RequestQueue requestQueue;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +87,20 @@ public class MenuActivity extends AppCompatActivity {
 
         txtUsuarioNombre.setText(user.getNOMBRES());
         txtDireccionMenu.setText(user.getDIRECCION());
+
+        requestQueue = Volley.newRequestQueue(context);
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            try {
+                ProviderInstaller.installIfNeeded(getApplicationContext());
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ProgressBarHandler(context);
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
 
@@ -223,8 +268,98 @@ public class MenuActivity extends AppCompatActivity {
                 selectedFragment).commit();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        progressBar.setVisibility(View.INVISIBLE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void CloseProgressBar(){
+        progressBar.setVisibility(View.INVISIBLE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+    public void OpenProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void ProgressBarHandler(Context context) {
+        ViewGroup layout = (ViewGroup) ((Activity) context).findViewById(android.R.id.content).getRootView();
+        progressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+        progressBar.setIndeterminate(true);
+        RelativeLayout.LayoutParams params = new
+                RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        RelativeLayout rl = new RelativeLayout(context);
+        rl.setGravity(Gravity.CENTER);
+        rl.addView(progressBar);
+        layout.addView(rl, params);
+    }
+
     public void btnRealizarPedido(View view){
-        Toast.makeText(this,"Pedido realizado con éxito.", Toast.LENGTH_LONG).show();
+
+        OpenProgressBar();
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JSONObject object = new JSONObject();
+
+        UsuarioBean usuarioBean = session.getUsuario();
+        ArrayList<TestBean> orders = new ArrayList<>();
+        TestBean testBean = new TestBean();
+        testBean.productId = "1";
+        testBean.quantity = "3";
+        orders.add(testBean);
+
+        TestBean testBean2 = new TestBean();
+        testBean2.productId = "2";
+        testBean2.quantity = "4";
+        orders.add(testBean2);
+
+        try {
+            JSONArray array=new JSONArray();
+            for (TestBean item :orders) {
+                JSONObject obj=new JSONObject();
+                obj.put("productId",item.productId);
+                obj.put("quantity",item.quantity);
+                array.put(obj);
+            }
+
+            object.put("storeId","1");
+            object.put("userId",usuarioBean.getID());
+            object.put("orderItems",array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Enter the correct url for your api service site
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, SERVER + "orders", object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String message = null;
+                        try {
+                            message = response.getString("message");
+                            Toast.makeText(getApplicationContext(),message, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        CloseProgressBar();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                CloseProgressBar();
+                Toast.makeText(context, "Error en el registro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers =  new HashMap<String, String>();
+                headers.put("Authorization", "Bearer " + session.getToken());
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
 
         final int millisUntilLaunch = 5000;
         final Handler handler = new Handler();

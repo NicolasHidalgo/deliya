@@ -200,15 +200,17 @@ public class SignUpActivity extends AppCompatActivity {
                 parametros.put("userTypeCode","CUST");
                 parametros.put("email",Email);
 
-                JSONObject address = new JSONObject();
+                parametros.put("address",Direccion);
+                parametros.put("ubigeo","150116");
+                /*JSONObject address = new JSONObject();
                 try {
                     address.put("address", Direccion);
                     address.put("ubigeo", "150116");
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
 
-                parametros.put("address", address.toString());
+                //parametros.put("address", address.toString());
                 parametros.put("password",Password);
                 return parametros;
             }

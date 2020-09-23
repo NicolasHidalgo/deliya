@@ -42,4 +42,5 @@ public class ResumenPedidoFragment extends Fragment {
 
         return view;
     }
+
 }
